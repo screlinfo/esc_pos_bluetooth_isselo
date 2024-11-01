@@ -15,7 +15,7 @@ dependencies:
       url: https://github.com/shajin-screl/esc_pos_utils_isselo.git
   flutter_bluetooth_basic:
     git:
-      url: https://github.com/andrey-ushakov/flutter_bluetooth_basic.git
+      url: https://github.com/screlinfo/flutter_bluetooth_basic_isselo
 
 dev_dependencies:
   flutter_test:
