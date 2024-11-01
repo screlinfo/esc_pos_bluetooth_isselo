@@ -12,8 +12,7 @@ dependencies:
   rxdart: ^0.28.0
   esc_pos_utils:
     git:
-      url: https://github.com/andrey-ushakov/esc_pos_utils/
-      ref: 865e7d563d9a6d7e1167fb6820afb10430c28e24
+      url: https://github.com/shajin-screl/esc_pos_utils_isselo.git
   flutter_bluetooth_basic:
     git:
       url: https://github.com/screlinfo/flutter_bluetooth_basic_isselo
