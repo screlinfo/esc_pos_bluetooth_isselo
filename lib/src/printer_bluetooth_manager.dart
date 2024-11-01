@@ -8,7 +8,7 @@
 
 import 'dart:async';
 import 'dart:io';
-import 'package:esc_pos_utils/esc_pos_utils.dart';
+import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter_bluetooth_basic/flutter_bluetooth_basic.dart';
 import './enums.dart';
@@ -35,8 +35,7 @@ class PrinterBluetoothManager {
   final BehaviorSubject<bool> _isScanning = BehaviorSubject.seeded(false);
   Stream<bool> get isScanningStream => _isScanning.stream;
 
-  final BehaviorSubject<List<PrinterBluetooth>> _scanResults =
-      BehaviorSubject.seeded([]);
+  final BehaviorSubject<List<PrinterBluetooth>> _scanResults = BehaviorSubject.seeded([]);
   Stream<List<PrinterBluetooth>> get scanResults => _scanResults.stream;
 
   Future _runDelayed(int seconds) {
@@ -52,10 +51,9 @@ class PrinterBluetoothManager {
       _scanResults.add(devices.map((d) => PrinterBluetooth(d)).toList());
     });
 
-    _isScanningSubscription =
-        _bluetoothManager.isScanning.listen((isScanningCurrent) async {
+    _isScanningSubscription = _bluetoothManager.isScanning.listen((isScanningCurrent) async {
       // If isScanning value changed (scan just stopped)
-      if (_isScanning.value! && !isScanningCurrent) {
+      if (_isScanning.value && !isScanningCurrent) {
         _scanResultsSubscription!.cancel();
         _isScanningSubscription!.cancel();
       }
@@ -81,7 +79,7 @@ class PrinterBluetoothManager {
     const int timeout = 5;
     if (_selectedPrinter == null) {
       return Future<PosPrintResult>.value(PosPrintResult.printerNotSelected);
-    } else if (_isScanning.value!) {
+    } else if (_isScanning.value) {
       return Future<PosPrintResult>.value(PosPrintResult.scanInProgress);
     } else if (_isPrinting) {
       return Future<PosPrintResult>.value(PosPrintResult.printInProgress);
