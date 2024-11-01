@@ -25,7 +25,7 @@ class PrinterBluetooth {
 
 /// Printer Bluetooth Manager
 class PrinterBluetoothManager {
-  final BluetoothManager _bluetoothManager = BluetoothManager.instance;
+  final BluetoothManager bluetoothManager = BluetoothManager.instance;
   bool _isPrinting = false;
   bool _isConnected = false;
   StreamSubscription? _scanResultsSubscription;
@@ -45,13 +45,13 @@ class PrinterBluetoothManager {
   void startScan(Duration timeout) async {
     _scanResults.add(<PrinterBluetooth>[]);
 
-    _bluetoothManager.startScan(timeout: timeout);
+    bluetoothManager.startScan(timeout: timeout);
 
-    _scanResultsSubscription = _bluetoothManager.scanResults.listen((devices) {
+    _scanResultsSubscription = bluetoothManager.scanResults.listen((devices) {
       _scanResults.add(devices.map((d) => PrinterBluetooth(d)).toList());
     });
 
-    _isScanningSubscription = _bluetoothManager.isScanning.listen((isScanningCurrent) async {
+    _isScanningSubscription = bluetoothManager.isScanning.listen((isScanningCurrent) async {
       // If isScanning value changed (scan just stopped)
       if (_isScanning.value && !isScanningCurrent) {
         _scanResultsSubscription!.cancel();
@@ -62,7 +62,7 @@ class PrinterBluetoothManager {
   }
 
   void stopScan() async {
-    await _bluetoothManager.stopScan();
+    await bluetoothManager.stopScan();
   }
 
   void selectPrinter(PrinterBluetooth printer) {
@@ -88,14 +88,14 @@ class PrinterBluetoothManager {
     _isPrinting = true;
 
     // We have to rescan before connecting, otherwise we can connect only once
-    await _bluetoothManager.startScan(timeout: Duration(seconds: 1));
-    await _bluetoothManager.stopScan();
+    // await bluetoothManager.startScan(timeout: Duration(seconds: 1));
+    // await bluetoothManager.stopScan();
 
     // Connect
-    await _bluetoothManager.connect(_selectedPrinter!._device);
+    await bluetoothManager.connect(_selectedPrinter!._device);
 
     // Subscribe to the events
-    _bluetoothManager.state.listen((state) async {
+    bluetoothManager.state.listen((state) async {
       switch (state) {
         case BluetoothManager.CONNECTED:
           // To avoid double call
@@ -108,7 +108,7 @@ class PrinterBluetoothManager {
             }
 
             for (var i = 0; i < chunks.length; i += 1) {
-              await _bluetoothManager.writeData(chunks[i]);
+              await bluetoothManager.writeData(chunks[i]);
               sleep(Duration(milliseconds: queueSleepTimeMs));
             }
 
@@ -116,7 +116,7 @@ class PrinterBluetoothManager {
           }
           // TODO sending disconnect signal should be event-based
           _runDelayed(3).then((dynamic v) async {
-            await _bluetoothManager.disconnect();
+            await bluetoothManager.disconnect();
             _isPrinting = false;
           });
           _isConnected = true;
